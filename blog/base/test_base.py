@@ -1,5 +1,5 @@
 from blog import app
-from flask import request
+from flask import request, render_template
 from blog.base.views import index
 
 
@@ -13,7 +13,11 @@ class TestMainPageSetUp(object):
 
     def test_welcome_page_returns_correct_html(self):
         with app.test_request_context('/', method='GET'):
-            res = index()  # res type - class 'str'
+            res = index()  # type 'str', rendered html
+            expected_html = render_template('index.html')  # type 'str', rendered html
+
             assert res.startswith('<!DOCTYPE html>')
             assert '<title>To-Do lists</title>' in res
             assert res.endswith('</html>')
+            assert res == expected_html
+

@@ -29,7 +29,11 @@ class NewVisitorTest(unittest.TestCase):
         rows = table.find_elements_by_tag_name('tr')
         self.assertTrue(
             any(row.text == '1: 공작깃털 사기' for row in rows),
+            "신규 작업 테이블에 표시되지 않는다."
         )
+
+import pytest
+
 
 # pytest code
 class TestNewVisitor(object):
@@ -40,7 +44,7 @@ class TestNewVisitor(object):
         browser.get('http://localhost:5000')
         assert 'To-Do' in browser.title
 
-        header_text = browser.find_element_by_name('h1').text
+        header_text = browser.find_element_by_tag_name('h1').text
         assert 'To-Do' in header_text
 
         inputbox = browser.find_element_by_id('id_new_item')
@@ -51,8 +55,7 @@ class TestNewVisitor(object):
 
         table = browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        for row in rows:
-            assert any(row.text == '1: 공작깃털 사기')
+        assert any(row.text == '1: 공작깃털 사기' for row in rows), "신규 작업 테이블에 표시되지 않는다."
 
         browser.quit()
 
