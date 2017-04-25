@@ -6,8 +6,13 @@
 </head>
 <body>
 <h1>Hello, To-Do</h1>
-<input type="text" id="id_new_item" placeholder="작업 아이템 입력">
+<form method="post" action="{{ url_for('base.index') }}">
+    <input type="text" name="item_text" id="id_new_item" placeholder="작업 아이템 입력">
+</form>
 <table id="id_list_table">
+    <tr>
+        <td>1: {{ new_item_text }}</td>
+    </tr>
 </table>
 </body>
 </html>

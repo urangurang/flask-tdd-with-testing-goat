@@ -1,5 +1,5 @@
 from blog import app
-from flask import request, render_template
+from flask import request, render_template, make_response
 from blog.base.views import index
 
 
@@ -21,3 +21,10 @@ class TestMainPageSetUp(object):
             assert res.endswith('</html>')
             assert res == expected_html
 
+    def test_home_page_can_save_a_post_request(self):
+        with app.test_client() as client:
+            keyword = '신규 작업 아이템'
+            rv = client.post('/', data=dict(item_text=keyword))
+            assert keyword in rv.data.decode('utf-8')
+            expected_html = render_template('index.html', new_item_text=keyword)
+            assert index() == expected_html
