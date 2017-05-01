@@ -1,5 +1,4 @@
 from flask import render_template, request
-
 from blog.base import base
 
 

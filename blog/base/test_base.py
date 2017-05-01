@@ -1,6 +1,28 @@
 from blog import app
-from flask import request, render_template, make_response
+from flask import request, render_template
 from blog.base.views import index
+from blog.base.models import Item
+from blog.database import db_session
+from unittest import TestCase
+
+
+class TestItemModel(object):
+
+    def test_saving_and_retrieving_items(self):
+        first_item = Item(text='첫 번째 아이템')
+        second_item = Item(text='두 번째 아이템')
+        db_session.add(first_item)
+        db_session.add(second_item)
+        db_session.commit()
+
+        saved_items = Item.query.all()
+        assert len(saved_items) == 2
+
+        first_saved_item = saved_items[0]
+        second_saved_item = saved_items[1]
+
+        assert first_saved_item.text == '첫 번째 아이템'
+        assert second_saved_item.text == '두 번째 아이템'
 
 
 class TestMainPageSetUp(object):
