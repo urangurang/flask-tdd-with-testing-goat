@@ -11,6 +11,11 @@ def index():
         item = Item(text=new_item_text)
         db_session.add(item)
         db_session.commit()
-        return redirect('/')
+        return redirect('/lists/the-only-list-in-the-world/')
+    return render_template('index.html')
+
+
+@base.route('/lists/the-only-list-in-the-world/', methods=['GET', 'POST'])
+def view_list():
     items = Item.query.all()
-    return render_template('index.html', items=items)
+    return render_template('list.html', items=items)

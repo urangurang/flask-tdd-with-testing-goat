@@ -1,23 +1,13 @@
 from blog import app
 from flask import request, render_template
-from blog.base.views import index
+from blog.base.views import index, view_list
 from blog.base.models import Item
 from blog.database import db_session
 from sqlalchemy import or_
 
 
-class TestHomePage(object):
-
-    def test_home_page_only_saves_items_when_necessary(self):
-        """Creates a WSGI environment from the given values (see
-        :class:`werkzeug.test.EnvironBuilder` for more information, this
-        function accepts the same arguments)."""
-        with app.test_request_context('/', method='GET'):
-            # request method 'GET'인 경우 데이터베이스에 새로운 레코드가 추가되는지
-            index()
-        assert Item.query.count() == 0
-
-    def test_home_page_displays_all_list_items(self):
+class TestLiveView(object):
+    def test_displays_all_items(self):
         item_01 = Item(text='itemey 1')
         item_02 = Item(text='itemey 2')
         db_session.add(item_01)
@@ -30,6 +20,26 @@ class TestHomePage(object):
         # or_ 사용해서 위에 입력한 테스트 값을 지워줍니다.
         db_session.query(Item).filter(or_(Item.text == 'itemey 1',
                                           Item.text == 'itemey 2')).delete()
+        db_session.commit()
+
+    def test_uses_list_template(self):
+        with app.test_request_context('/lists/the-only-list-in-the-world/'):
+            res = view_list()
+            assert res == list.html
+
+
+class TestHomePage(object):
+
+    def test_home_page_only_saves_items_when_necessary(self):
+        """Creates a WSGI environment from the given values (see
+        :class:`werkzeug.test.EnvironBuilder` for more information, this
+        function accepts the same arguments)."""
+        with app.test_request_context('/', method='GET'):
+            # request method 'GET'인 경우 데이터베이스에 새로운 레코드가 추가되는지
+            before_count = Item.query.count()
+            index()
+            after_count = Item.query.count()
+        assert before_count == after_count
 
 
 class TestItemModel(object):
