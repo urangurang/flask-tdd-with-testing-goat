@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Hello, To-Do</h1>
-<form method="post" action="{{ url_for('base.index') }}">
+<form method="post" action="{{ url_for('base.new_list') }}">
     <input type="text" name="item_text" id="id_new_item" placeholder="작업 아이템 입력">
     <button type="submit">입력</button>
 </form>
