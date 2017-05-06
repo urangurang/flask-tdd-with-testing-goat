@@ -1,7 +1,7 @@
 from blog import app
 from flask import request, render_template
 from blog.base.views import index, view_list
-from blog.base.models import Item
+from blog.base.models import Item, List
 from blog.database import db_session
 from sqlalchemy import or_
 
@@ -34,8 +34,11 @@ class TestNewList(object):
 
 class TestLiveView(object):
     def test_displays_all_items(self):
-        item_01 = Item(text='itemey 1')
-        item_02 = Item(text='itemey 2')
+        list_ = List()
+        db_session.add(list_)
+        db_session.commit()
+        item_01 = Item(text='itemey 1', list=list_.id)
+        item_02 = Item(text='itemey 2', list=list_.id)
         db_session.add(item_01)
         db_session.add(item_02)
         db_session.commit()
@@ -43,10 +46,11 @@ class TestLiveView(object):
             res = view_list()
             assert item_01.text in res
             assert item_02.text in res
-        # or_ 사용해서 위에 입력한 테스트 값을 지워줍니다.
-        db_session.query(Item).filter(or_(Item.text == 'itemey 1',
-                                          Item.text == 'itemey 2')).delete()
-        db_session.commit()
+
+            Item.query.filter(Item.list == list_.id).delete()
+            db_session.commit()
+            List.query.filter(List.id == list_.id).delete()
+            db_session.commit()
 
     def test_uses_list_template(self):
         with app.test_request_context('/lists/the-only-list-in-the-world/'):
@@ -56,11 +60,15 @@ class TestLiveView(object):
             pass
 
 
-class TestItemModel(object):
+class TestListAndItemModels(object):
 
     def test_saving_and_retrieving_items(self):
-        first_item = Item(text='첫 번째 아이템')
-        second_item = Item(text='두 번째 아이템')
+        list_ = List()
+        db_session.add(list_)
+        db_session.commit()
+
+        first_item = Item(text='첫 번째 아이템', list=list_.id)
+        second_item = Item(text='두 번째 아이템', list=list_.id)
         db_session.add(first_item)
         db_session.add(second_item)
         db_session.commit()
@@ -71,9 +79,13 @@ class TestItemModel(object):
         second_saved_item = saved_items[1]
 
         assert first_saved_item.text == '첫 번째 아이템'
+        assert first_saved_item.list == list_.id
         assert second_saved_item.text == '두 번째 아이템'
+        assert second_saved_item.list == list_.id
+
         Item.query.filter(Item.text == '첫 번째 아이템').delete()
         Item.query.filter(Item.text == '두 번째 아이템').delete()
+        List.query.filter(List.id == list_.id).delete()
         db_session.commit()
 
 

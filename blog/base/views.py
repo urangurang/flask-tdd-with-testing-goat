@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect
 from blog.base import base
-from blog.base.models import Item
+from blog.base.models import Item, List
 from blog.database import db_session
 
 
@@ -17,7 +17,8 @@ def view_list():
 
 @base.route('/lists/new', methods=['GET', 'POST'])
 def new_list():
-    item = Item(text=request.form['item_text'])
+    list_ = List()
+    item = Item(text=request.form['item_text'], list=list_.id)
     db_session.add(item)
     db_session.commit()
     return redirect('/lists/the-only-list-in-the-world/')
