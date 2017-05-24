@@ -25,7 +25,7 @@ class TestNewList(object):
             # print(rv) <Response streamed [302 FOUND]>
             # print(type(rv)) <class 'flask.wrappers.Response'>
             assert rv.status_code == 302
-            assert '/lists/the-only-list-in-the-world/' in rv.location
+            assert '/lists/' in rv.location
             assert request.path == '/lists/new'
             Item.query.filter(Item.text == '신규 작업 아이템').delete()
             db_session.commit()
@@ -33,31 +33,41 @@ class TestNewList(object):
 
 
 class TestLiveView(object):
-    def test_displays_all_items(self):
-        list_ = List()
-        db_session.add(list_)
+    def test_displays_only_items_for_that_list(self):
+        correct_list = List()
+        db_session.add(correct_list)
         db_session.commit()
-        item_01 = Item(text='itemey 1', list=list_.id)
-        item_02 = Item(text='itemey 2', list=list_.id)
+        item_01 = Item(text='itemey 1', list=correct_list.id)
+        item_02 = Item(text='itemey 2', list=correct_list.id)
         db_session.add(item_01)
         db_session.add(item_02)
         db_session.commit()
-        with app.test_request_context('/lists/the-only-list-in-the-world/'):
-            res = view_list()
+
+        other_list = List()
+        db_session.add(other_list)
+        db_session.commit()
+        other_item_01 = Item(text='다른 목록 아이템 1', list=other_list.id)
+        other_item_02 = Item(text='다른 목록 아이템 2', list=other_list.id)
+
+        with app.test_request_context('/lists/%d' % correct_list.id):
+            res = view_list(list_id=correct_list.id)
             assert item_01.text in res
             assert item_02.text in res
-
-            Item.query.filter(Item.list == list_.id).delete()
+            assert other_item_01.text not in res
+            assert other_item_02.text not in res
+            Item.query.filter(Item.list == correct_list.id).delete()
+            Item.query.filter(Item.list == other_list.id).delete()
             db_session.commit()
-            List.query.filter(List.id == list_.id).delete()
+            List.query.filter(List.id == correct_list.id).delete()
+            List.query.filter(List.id == other_list.id).delete()
             db_session.commit()
 
     def test_uses_list_template(self):
-        with app.test_request_context('/lists/the-only-list-in-the-world/'):
-            # self.assertTemplateUsed - Django test function
-            # res = view_list()
-            # assert res != render_template('list.html')
-            pass
+        with app.test_client() as client:
+            list_ = List()
+            db_session.add(list_)
+            db_session.commit()
+            client.get('/lists/%d/' % list_.id)
 
 
 class TestListAndItemModels(object):

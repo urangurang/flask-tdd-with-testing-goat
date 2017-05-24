@@ -34,6 +34,23 @@
 $ pip install -r requirement.text
 ```
 
+관련 라이브러리 설치 후 예제에 사용된 DB 모델 테이블을 생성해줍니다.
+
+```
+$ export FLASK_APP=blog/__init__.py
+$ flask shell
+>>> from blog.databse import init_db
+>>> init_db()
+```
+
+    def init_db():
+        import blog.base.models
+        Base.metadata.create_all(bind=engine)
+
+init_db()를 통해 models.py에 있는 클래스가 sqlite에 만들어집니다.
+
+저는 db 파일을 tmp 경로에 만들도록 해두었습니다. 
+
 본 예제에서 데이터베이스는 sqlite가 사용되었습니다. [다운로드](http://www.sqlite.org/download.html)
 
 ### 라이센스
