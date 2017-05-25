@@ -22,7 +22,7 @@ class TestNewVisitor(object):
         assert 'To-Do' in self.browser.title
 
         header_text = self.browser.find_element_by_tag_name('h1').text
-        assert 'To-Do' in header_text
+        assert '작업 목록' in header_text
 
         inputbox = self.browser.find_element_by_id('id_new_item')
         assert inputbox.get_attribute('placeholder') == '작업 아이템 입력'
@@ -41,7 +41,6 @@ class TestNewVisitor(object):
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('공작깃털을 이용해서 그물 만들기')
         inputbox.send_keys(Keys.ENTER)
-
         self.check_for_row_in_list_table("1: 공작깃털 사기")
         self.check_for_row_in_list_table("2: 공작깃털을 이용해서 그물 만들기")
 
@@ -50,6 +49,7 @@ class TestNewVisitor(object):
         assert '그물 만들기' in page_text
 
         # 프란시스가 새로운 작업 아이템을 입력하기 시작한다.
+        self.browser.get('http://localhost:5000')
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('우유 사기')
         inputbox.send_keys(Keys.ENTER)
@@ -65,5 +65,4 @@ class TestNewVisitor(object):
         page_text = self.browser.find_element_by_tag_name('body').text
         assert '공작깃털 사기' not in page_text
         assert '우유 사기' in page_text
-
         assert 0, "Finish the test!"

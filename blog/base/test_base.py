@@ -118,3 +118,20 @@ class TestMainPageSetUp(object):
             assert res.endswith('</html>')
             # table에 데이터베이스의 값이 들어오면서 index()의 반환값과 index.html의 값이 달라지게 됩니다.
             assert res == expected_html
+
+
+class TestNewItem(object):
+
+    def test_can_save_a_post_request_to_an_existing_list(self):
+        other_list = List()
+        correct_list = List()
+
+        db_session.add(other_list)
+        db_session.add(correct_list)
+        db_session.commit()
+
+        with app.test_client() as client:
+            client.post(
+                '/lists/%d/add_item' % (correct_list.id,),
+                data=dict(item_text='기존 목록에 신규 아이템')
+            )
