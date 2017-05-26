@@ -15,6 +15,19 @@ class TestNewVisitor(object):
     def url_match(url):
         raise ValueError(url)
 
+    # using fixture set_browser in conftest.py
+    def test_layout_and_styling(self, browser):
+        # 에디스는 메인 페이지를 방문한다.
+        browser.get('http://localhost:5000')
+        browser.set_window_size(1024, 768)
+
+        inputbox = browser.find_element_by_id('id_new_item')
+
+        location_value = inputbox.location['x'] + inputbox.size['width'] / 2
+
+        assert 500 < location_value < 530
+
+
     def test_show_title(self):
         self.browser = webdriver.Chrome()
         self.browser.implicitly_wait(3)
