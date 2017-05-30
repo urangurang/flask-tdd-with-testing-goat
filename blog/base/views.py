@@ -6,7 +6,7 @@ from blog.database import db_session
 
 @base.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
+    return render_template('home.html')
 
 
 @base.route('/lists/<int:list_id>', methods=['GET', 'POST'])

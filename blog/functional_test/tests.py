@@ -27,7 +27,6 @@ class TestNewVisitor(object):
 
         assert 500 < location_value < 530
 
-
     def test_show_title(self):
         self.browser = webdriver.Chrome()
         self.browser.implicitly_wait(3)

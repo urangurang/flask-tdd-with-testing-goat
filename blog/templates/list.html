@@ -1,19 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>To-Do lists</title>
-</head>
-<body>
-<h1>작업 목록 시작</h1>
-<form method="post" action="/lists/{{ list_id }}/add_item">
-    <input type="text" name="item_text" id="id_new_item" placeholder="작업 아이템 입력">
-    <button type="submit">입력</button>
-</form>
-<table id="id_list_table">
+{% extends 'base.html' %}
+{% block header_text %}Your To-Do list{% endblock %}
+
+{% block form_action %}/lists/{{ list_id }}/add_item{% endblock %}
+
+{% block table %}
+
     {% for item in items %}
         <tr><td>{{ loop.index }}: {{ item.text }}</td></tr>
     {% endfor %}
-</table>
-</body>
-</html>
+
+{% endblock %}
