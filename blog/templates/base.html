@@ -4,17 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-Do lists</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css" media="screen">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" media="screen">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" media="screen">
 </head>
 <body>
-    <h1>{% block header_text %}{% endblock %}</h1>
-    <form action="{% block form_action %}{% endblock %}" method="POST">
-        <input type="text" name="item_text" id="id_new_item" placeholder="작업 아이템 입력">
-    </form>
-    {% block table %}
+<div class="container">
+    <div class="col-md-6 col-md-offset-3 jumbotron">
+        <div class="text-center">
+            <h1>{% block header_text %}{% endblock %}</h1>
+            <form action="{% block form_action %}{% endblock %}" method="POST">
+                <input type="text" name="item_text" id="id_new_item" placeholder="작업 아이템 입력">
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            {% block table %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
 
-    {% endblock %}
-    <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 </body>
 </html>
