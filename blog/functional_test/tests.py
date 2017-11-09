@@ -5,17 +5,12 @@ import pytest
 
 # pytest code
 class TestNewVisitor(object):
-
-    def check_for_row_in_list_table(self, row_text):
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        assert any(row_text in row.text for row in rows)
-
     @staticmethod
     def url_match(url):
         raise ValueError(url)
 
     # using fixture set_browser in conftest.py
+    @pytest.mark.skip
     def test_layout_and_styling(self, browser):
         # 에디스는 메인 페이지를 방문한다.
         browser.get('http://localhost:5000')
@@ -27,6 +22,18 @@ class TestNewVisitor(object):
 
         assert 500 < location_value < 530
 
+    # def test_cannot_add_empty_list_items(self):
+    #     # 에디스는 메인 페이지에 접속해서 빈 아이템을 실수로 등록하려고 한다
+    #     # 입력 상자가 비어 있는 상태에서 엔터키를 누른다
+    #
+    #     # 페이지가 새로고침되고 빈 아이템을 등록할 수 없다는 에러 메시지가 표시된다
+    #     # 다른 아이템을 입력하고 이번에는 정상 처리된다
+    #     # 그녀는 고의적으로 다시 빈 아이템을 등록
+    #     # 리스트 페이지에 다시 에러 메시지 표시
+    #     # 아이템을 입력하면 정상 동작한다
+    #     self.fail('write me!')
+
+    @pytest.mark.skip
     def test_show_title(self):
         self.browser = webdriver.Chrome()
         self.browser.implicitly_wait(3)
@@ -53,8 +60,6 @@ class TestNewVisitor(object):
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('공작깃털을 이용해서 그물 만들기')
         inputbox.send_keys(Keys.ENTER)
-        self.check_for_row_in_list_table("1: 공작깃털 사기")
-        self.check_for_row_in_list_table("2: 공작깃털을 이용해서 그물 만들기")
 
         page_text = self.browser.find_element_by_tag_name('body').text
         assert '공작깃털 사기' in page_text
@@ -77,4 +82,3 @@ class TestNewVisitor(object):
         page_text = self.browser.find_element_by_tag_name('body').text
         assert '공작깃털 사기' not in page_text
         assert '우유 사기' in page_text
-        assert 0, "Finish the test!"

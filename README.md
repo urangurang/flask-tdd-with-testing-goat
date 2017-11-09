@@ -39,7 +39,7 @@ $ pip install -r requirement.text
 ```
 $ export FLASK_APP=blog/__init__.py
 $ flask shell
->>> from blog.databse import init_db
+>>> from blog.database import init_db
 >>> init_db()
 ```
 

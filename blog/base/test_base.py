@@ -111,7 +111,7 @@ class TestMainPageSetUp(object):
 
         with app.test_request_context('/', method='GET'):
             res = index()  # type 'str', rendered html
-            expected_html = render_template('index.html')  # type 'str', rendered html
+            expected_html = render_template('home.html')  # type 'str', rendered html
 
             assert res.startswith('<!DOCTYPE html>')
             assert '<title>To-Do lists</title>' in res
